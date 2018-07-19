@@ -4,6 +4,7 @@
 #include "Perception/PawnSensingComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Public/TimerManager.h"
+#include "FPSGameMode.h"
 
 
 
@@ -35,6 +36,12 @@ void AFPSAIGuard::OnPawnSeen(APawn* SeenPawn)
 		return;
 	}
 
+	AFPSGameMode* GM = Cast<AFPSGameMode>(GetWorld()->GetAuthGameMode());
+	if (GM)
+	{
+		GM->CompleteMission(SeenPawn, false);
+	}
+
 	DrawDebugSphere(GetWorld(), SeenPawn->GetActorLocation(), 32.0f, 12, FColor::Red, false, 10.0f);
 }
 
@@ -52,7 +59,7 @@ void AFPSAIGuard::OnNoiseHeard(APawn* NoiseInstigator, const FVector& Location, 
 	SetActorRotation(NewLookAt);
 
 	GetWorldTimerManager().ClearTimer(TimerHandle_ResetOrientation);
-	GetWorldTimerManager().SetTimer(TimerHandle_ResetOrientation, this, &AFPSAIGuard::ResetOrientation, 3.0f)
+	GetWorldTimerManager().SetTimer(TimerHandle_ResetOrientation, this, &AFPSAIGuard::ResetOrientation, 3.0f);
 }
 
 void AFPSAIGuard::ResetOrientation()
