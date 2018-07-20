@@ -6,6 +6,7 @@
 #include "Public/TimerManager.h"
 #include "FPSGameMode.h"
 #include "Engine/World.h"
+#include "Net/UnrealNetwork.h"
 
 
 
@@ -93,6 +94,11 @@ void AFPSAIGuard::ResetOrientation()
 }
 
 
+void AFPSAIGuard::OnRep_GuardState()
+{
+	OnStateChanged(GuardState);
+}
+
 void AFPSAIGuard::SetGuardState(EAIState NewState)
 {
 	if (GuardState == NewState)
@@ -101,8 +107,7 @@ void AFPSAIGuard::SetGuardState(EAIState NewState)
 	}
 
 	GuardState = NewState;
-
-	OnStateChanged(GuardState);
+	OnRep_GuardState();
 }
 
 // Called every frame
@@ -112,4 +117,10 @@ void AFPSAIGuard::Tick(float DeltaTime)
 
 }
 
+void AFPSAIGuard::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AFPSAIGuard, GuardState);
+}
 
