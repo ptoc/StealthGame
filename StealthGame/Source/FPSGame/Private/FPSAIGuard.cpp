@@ -5,6 +5,7 @@
 #include "DrawDebugHelpers.h"
 #include "Public/TimerManager.h"
 #include "FPSGameMode.h"
+#include "Engine/World.h"
 
 
 
@@ -54,7 +55,7 @@ void AFPSAIGuard::OnPawnSeen(APawn* SeenPawn)
 
 void AFPSAIGuard::OnNoiseHeard(APawn* NoiseInstigator, const FVector& Location, float Volume)
 {
-	if (GuardState = EAIState::Alerted)
+	if (GuardState == EAIState::Alerted)
 	{
 		return;
 	}
