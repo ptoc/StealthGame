@@ -49,6 +49,20 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 }
 
 
+void AFPSCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (!IsLocallyControlled())
+	{
+		FRotator NewRot = CameraComponent->RelativeRotation;
+		// Remotepitch stores as uint8, must be "uncompressed" because it can't have negative values
+		NewRot.Pitch = RemoteViewPitch * 360.0f / 255.0f; 
+
+		CameraComponent->SetRelativeRotation(NewRot);
+	}
+}
+
 void AFPSCharacter::Fire()
 {
 	ServerFire(); // ask server to fire, since our server can also be a player he will ask for it also and it will execute immediately
